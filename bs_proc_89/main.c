@@ -8,42 +8,34 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <unistd.h>
 #include <errno.h>
 
 int main(int argc, const char * argv[])
 {
-    srandom(time(NULL));
-    int processCount = atoi(argv[1]);
-    
+    int gendepth = 3;
+    int gencurr = gendepth;
     int i;
-    for (i=0; i < processCount; i++) {
-        int forkreturn = fork();
-        if (forkreturn == -1) {
+    
+    for (i = 0; i < gendepth; i++) {
+        pid_t mypid = fork();
+        if (mypid == -1) {
             perror(NULL);
             exit(EXIT_FAILURE);
         }
-        else if (forkreturn != 0)
+        else if (mypid != 0)
         {
-            //Parent process
-            continue;
+            //Parent
+            break;
         }
-        else
-        {
-            //Child
-            printf("I'm a child!\n");
-            sleep(10);
-            printf("Child is sleepy\n");
-            exit(EXIT_SUCCESS);
-        }
-        
+        gencurr--;
         
     }
+    wait(NULL);
+    printf("%d ",gendepth-gencurr);
     
-    sleep(20);
-    printf("Parent is sleepy\n");
     
-    return EXIT_SUCCESS;
+    
+
 }
 
